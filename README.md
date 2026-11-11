@@ -18,7 +18,7 @@ A personal website with an AI chatbot that answers questions about me, my backgr
 - - **LLM provider**: Gemini
 - - **Tests: pytest
  
-
+```
 ## Project Structure
 digital-twin/
 ├── app.py               # Gradio interface and entry point
@@ -34,3 +34,4 @@ digital-twin/
 ├── requirements.txt
 ├── .env.example
 └── README.md
+```
