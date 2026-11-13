@@ -1,7 +1,7 @@
 """Main entry point to interact with the LLM"""
-from llm.llm_client import LLMService
-from prompts.prompt_templates import PromptTemplates
-from process_docs.process_files import ChromaDb
+from backend.llm.llm_client import LLMService
+from backend.prompts.prompt_templates import PromptTemplates
+from backend.vector_db.vec_db import ChromaDb
 chroma = ChromaDb()
 prompt_ = PromptTemplates()
 llm_client = LLMService()
