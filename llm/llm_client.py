@@ -4,7 +4,7 @@ from google.genai import types
 from dotenv import load_dotenv
 load_dotenv()
 class LLMService:
-    def __init__(self, api_key: str | None = None, default_model: str = "gemini-3.5-flash-lite", system_instruction: str | None = None):
+    def __init__(self,  default_model: str = "gemini-3.5-flash-lite", system_instruction: str | None = None):
         """
         Initialize the Gemini client. 
         Falls back to the GEMINI_API_KEY environment variable if api_key is not passed.
