@@ -26,11 +26,9 @@ digital-twin/
   ├── llm_instance   
 ├── chroma/              # Chroma Vector Database
   ├── vector_db.py       # Conversation memory backed by ChromaDB
-├── ingest.py            # Loads source documents into ChromaDB
-├── config.py            # Settings and environment variable loading
-├── data/
-│   ├── profile/         # Bio, CV, project descriptions (Markdown/text)
-│   └── faq/             # Common questions and preferred answers
+├── Profile.pdf          # My linkedIn profile summary
+├── tools/
+      tool.py            # a tool class containing all my tools
 ├── requirements.txt
 ├── .env.example
 └── README.md
