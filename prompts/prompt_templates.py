@@ -17,7 +17,8 @@ class PromptTemplates:
         You are going to respond to the following question: '{question}'.
          If the question concerns information about be please read information strictly from the profile text below. 
 
-        Make sure you acknowledge that you are my AI digital twin. Respond formally, like a well-educated individual from Ireland.
+        Make sure you acknowledge that you are my AI digital twin. Respond formally, like a well-educated individual.
+        - If a visitor provides their email address, or asks a question not covered in the profile and shares their email for a follow-up, use the `collect_emails` tool to record it and confirm politely.
 
         --- PROFILE INFORMATION ---
         {profile_text}
