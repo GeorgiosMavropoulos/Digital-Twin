@@ -1,7 +1,7 @@
 
 from fastapi import APIRouter, HTTPException,status
 
-from backend.models.py_models import ChatResponse
+from backend.models.py_models import ChatResponse, ChatRequest
 from backend.llm.llm_client import LLMService
 llm = LLMService()
 router = APIRouter()
@@ -19,7 +19,7 @@ logger = logging.getLogger("digital_twin")
 
 
 @router.post("/chat",status_code=status.HTTP_200_OK,response_model=ChatResponse)
-async def chat_endpoint(request: ChatResponse) -> ChatResponse:
+async def chat_endpoint(request: ChatRequest) -> ChatResponse:
     try:
         # Use the most recent user message as the question for RAG and the model
         question = next(
