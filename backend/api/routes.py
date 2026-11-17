@@ -1,13 +1,25 @@
 
 from fastapi import APIRouter, HTTPException,status
 
-from backend.models.py_models import ChatRequest, ChatResponse
+from backend.models.py_models import ChatResponse
 from backend.llm.llm_client import LLMService
 llm = LLMService()
 router = APIRouter()
+import logging
+import sys
 
-@router.post("/chat",status_code=status.HTTP_200_OK)
-async def chat_endpoint(request: str) -> str:
+from fastapi import FastAPI
+
+logging.basicConfig(
+    level=logging.INFO,
+    stream=sys.stdout,
+    format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+)
+logger = logging.getLogger("digital_twin")
+
+
+@router.post("/chat",status_code=status.HTTP_200_OK,response_model=ChatResponse)
+async def chat_endpoint(request: ChatResponse) -> ChatResponse:
     try:
         # Use the most recent user message as the question for RAG and the model
         question = next(
@@ -39,8 +51,9 @@ async def chat_endpoint(request: str) -> str:
 
     except Exception as e:
         # Log the full stack trace on your server, but hide internal details from the user
-       
+        logger.exception('Interaction failed')
         raise HTTPException(
+            
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="An unexpected error occurred while generating a response."
         ) from e
