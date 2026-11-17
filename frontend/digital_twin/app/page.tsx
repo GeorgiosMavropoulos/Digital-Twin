@@ -23,11 +23,16 @@ const suggestions = [
 ];
 
 export default function Home() {
+  
+  //define the API url to interact with backend
+  const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:8000";
   // Typewriter state
   const introRef = useRef<HTMLElement>(null);
   const [chunkIndex, setChunkIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
   const [started, setStarted] = useState(false);
+
+  const [isSending, setIsSending] = useState(false);
 
   // Chat state
   const [message, setMessage] = useState("");
@@ -40,7 +45,9 @@ export default function Home() {
         "Hey! Welcome to my digital twin. Ask me anything about my background, interests, experiences, or the way I think.",
     },
   ]);
+  
 
+  
   // Start the typewriter when the intro scrolls into view.
   // Falls back to starting immediately if IntersectionObserver is unavailable.
   useEffect(() => {
@@ -88,25 +95,45 @@ export default function Home() {
 
   const isDone = chunkIndex >= introChunks.length;
 
-  function sendMessage(text = message) {
-    const trimmed = text.trim();
-    if (!trimmed) return;
+  ///function to send message to the model
+async function sendMessage(text = message) {
+  const trimmed = text.trim();
+  if (!trimmed || isSending) return;
 
-    setMessages((current) => [...current, { role: "user", content: trimmed }]);
-    setMessage("");
+  const updated = [...messages, { role: "user" as const, content: trimmed }];
+  setMessages(updated);
+  setMessage("");
+  setIsSending(true);
 
-    // Replace this with your Python backend API
-    setTimeout(() => {
-      setMessages((current) => [
-        ...current,
-        {
-          role: "assistant",
-          content:
-            "That's a great question! Connect your AI backend here so I can answer using Georgios's knowledge, memories, and personality.",
-        },
-      ]);
-    }, 700);
+  try {
+    const res = await fetch(`${API_URL}/chat`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messages: updated }),
+    });
+
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}`);
+    }
+
+    const data: { reply: string } = await res.json();
+    setMessages((current) => [
+      ...current,
+      { role: "assistant", content: data.reply },
+    ]);
+  } catch (err) {
+    console.error(err);
+    setMessages((current) => [
+      ...current,
+      {
+        role: "assistant",
+        content: "Sorry, I couldn't reach the server. Please try again in a moment.",
+      },
+    ]);
+  } finally {
+    setIsSending(false);
   }
+}
 
   return (
     <main className="site-shell">
@@ -290,9 +317,9 @@ export default function Home() {
               placeholder="Ask me anything..."
             />
 
-            <button type="submit" aria-label="Send message">
-              ↑
-            </button>
+            <button type="submit" aria-label="Send message" disabled={isSending}>
+            ↑
+          </button>
           </form>
 
           <div className="chat-disclaimer">
