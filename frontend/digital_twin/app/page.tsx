@@ -101,7 +101,7 @@ async function sendMessage(text = message) {
   if (!trimmed || isSending) return;
 
   const updated = [...messages, { role: "user" as const, content: trimmed }];
-  setMessages(updated);
+  setMessages([...updated, { role: "assistant", content: "" }]);
   setMessage("");
   setIsSending(true);
 
@@ -112,24 +112,35 @@ async function sendMessage(text = message) {
       body: JSON.stringify({ messages: updated }),
     });
 
-    if (!res.ok) {
+    if (!res.ok || !res.body) {
       throw new Error(`HTTP ${res.status}`);
     }
 
-    const data: { reply: string } = await res.json();
-    setMessages((current) => [
-      ...current,
-      { role: "assistant", content: data.reply },
-    ]);
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      const chunk = decoder.decode(value, { stream: true });
+      setMessages((current) => {
+        const copy = [...current];
+        const last = copy[copy.length - 1];
+        copy[copy.length - 1] = { ...last, content: last.content + chunk };
+        return copy;
+      });
+    }
   } catch (err) {
     console.error(err);
-    setMessages((current) => [
-      ...current,
-      {
+    setMessages((current) => {
+      const copy = [...current];
+      copy[copy.length - 1] = {
         role: "assistant",
         content: "Sorry, I couldn't reach the server. Please try again in a moment.",
-      },
-    ]);
+      };
+      return copy;
+    });
   } finally {
     setIsSending(false);
   }
