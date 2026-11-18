@@ -7,6 +7,7 @@ from backend.tools.tool import Tools
 from collections.abc import Iterator
 from backend.vector_db.vec_db import ChromaDb
 import logging
+import httpx
 
 
 
@@ -89,7 +90,7 @@ class LLMService:
                 logger.exception(f"[API Error {e.code}]: {e.message}")
                 yield  "An unexpected service error occurred."
 
-        except (ConnectionError, TimeoutError) as e:
+        except (httpx.ConnectError, httpx.TimeoutException, ConnectionError, TimeoutError) as e:
             logger.exception(f"Chat handler failed: {e}")
             yield  "Network connection issue. Please check your internet and try again."
 

@@ -8,8 +8,10 @@ app = FastAPI()
 ##allow requests on other servers
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['https://digital-twin-dqlo.onrender.com'],
-    allow_methods=["https://digital-twin-trfp.vercel.app/"],
+    allow_origins=["https://digital-twin-trfp.vercel.app/"],
+    
+    allow_credentials=True,
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 app.include_router(rt)
