@@ -300,7 +300,17 @@ async function sendMessage(text = message) {
                   <div className="message-avatar">✳</div>
                 )}
 
-                <div className="message-bubble">{msg.content}</div>
+                <div className="message-bubble">
+  {msg.content === "" ? (
+    <span className="typing-dots">
+      <span />
+      <span />
+      <span />
+    </span>
+  ) : (
+    msg.content
+  )}
+</div>
               </div>
             ))}
           </div>
