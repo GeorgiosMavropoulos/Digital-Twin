@@ -15,8 +15,8 @@ A personal website with an AI chatbot that answers questions about me, my backgr
 - **Python 3.10+**
 - **ChromaDB**: vector store for embeddings of my profile and documents, plus conversation memory
 - **Next.JS**: web UI for the chatbot
-- - **LLM provider**: Gemini
-- - **Tests: pytest
+- **LLM provider**: Gemini
+- **Tests: pytest
  
 ```
 digital-twin/
