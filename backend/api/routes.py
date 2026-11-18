@@ -18,7 +18,7 @@ logging.basicConfig(
 logger = logging.getLogger("digital_twin")
 
 
-@router.post("/chat",status_code=status.HTTP_200_OK,response_model=ChatResponse)
+@router.post("/chat",status_code=status.HTTP_200_OK,response_model=StreamingResponse)
 async def chat_endpoint(request: ChatRequest) -> StreamingResponse:
     try:
         # Use the most recent user message as the question for RAG and the model
