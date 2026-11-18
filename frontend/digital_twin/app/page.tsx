@@ -179,7 +179,7 @@ async function sendMessage(text = message) {
         <div className="profile-card">
           <div className="profile-image">
             <img
-              src="/me.jpg"
+              src="/me.JPG"
               alt="Georgios Mavropoulos"
               onError={(e) => {
                 e.currentTarget.style.display = "none";
