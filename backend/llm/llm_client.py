@@ -4,8 +4,10 @@ from google.genai import types
 from dotenv import load_dotenv
 from google.genai import errors
 from backend.tools.tool import Tools
+from collections.abc import Iterator
 from backend.vector_db.vec_db import ChromaDb
 import logging
+
 
 
 logger = logging.getLogger("digital_twin")
@@ -38,62 +40,62 @@ class LLMService:
             config=config
         )
 
-    def generate_text(self, question: str,) -> str:
-        """Generates text from a prompt using the initialized client."""     
-        
+    def generate_text(self, question: str,) -> Iterator[str]:      
        
+        """Yields text chunks as the model generates them."""
         try:
-            # 1. Retrieve relevant context based on the user's question
             relevant_context = chroma.retrieve_from_chroma(question)
-
-            #build the prompt
             prompt = prompt_.digital_twin_prompt(
                 profile_text=relevant_context,
-                question=question
+                question=question,
             )
-            
-            response = self.chat.send_message(message=prompt)
 
-            #create a loop to if llm called a tool
-            while response.function_calls:
+            message = prompt
+            while True:
+                function_calls = []
+
+                for chunk in self.chat.send_message_stream(message=message):
+                    if chunk.function_calls:
+                        function_calls.extend(chunk.function_calls)
+                    if chunk.text:
+                        yield chunk.text
+
+                # No tool calls means the answer is complete
+                if not function_calls:
+                    break
+
                 tool_responses = []
-                for call in response.function_calls:
-                    result =tool.execute(call.name, call.args)
+                for call in function_calls:
+                    result = tool.execute(call.name, call.args)
                     tool_responses.append(
                         types.Part.from_function_response(
                             name=call.name,
                             response={"result": result},
                         )
                     )
-                response = self.chat.send_message(tool_responses)
-            
-            # validate if response is empty
-            if not response.text:
-                return "I apologize, I could not generate a response for that request."
-                
-            return response.text
+                message = tool_responses
 
         except errors.APIError as e:
             if e.code == 429:
                 logger.exception(f"[API Rate Limit]: {e.message}")
-                return "I am currently receiving too many requests. Please try again in a moment."
+                yield  "I am currently receiving too many requests. Please try again in a moment."
             elif e.code in (400, 404):
                 logger.exception(f"[API Client Error {e.code}]: {e.message}")
-                return "There was a configuration issue while processing your request."
+                yield  "There was a configuration issue while processing your request."
             elif e.code in (500, 503):
                 logger.exception(f"[API Server Error {e.code}]: {e.message}")
-                return "The AI service is temporarily unavailable. Please try again shortly."
+                yield  "The AI service is temporarily unavailable. Please try again shortly."
             else:
                 logger.exception(f"[API Error {e.code}]: {e.message}")
-                return "An unexpected service error occurred."
+                yield  "An unexpected service error occurred."
 
         except (ConnectionError, TimeoutError) as e:
             logger.exception(f"Chat handler failed: {e}")
-            return "Network connection issue. Please check your internet and try again."
+            yield  "Network connection issue. Please check your internet and try again."
 
         except Exception as e:
             logger.exception(f"Chat handler failed: {e}")
-            return "An internal error occurred. Please try again."
+            yield  "An internal error occurred. Please try again."
 
 
 

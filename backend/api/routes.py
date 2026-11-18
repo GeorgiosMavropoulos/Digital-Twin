@@ -1,6 +1,6 @@
 
 from fastapi import APIRouter, HTTPException,status
-
+from fastapi.responses import StreamingResponse
 from backend.models.py_models import ChatResponse, ChatRequest
 from backend.llm.llm_client import LLMService
 llm = LLMService()
@@ -19,7 +19,7 @@ logger = logging.getLogger("digital_twin")
 
 
 @router.post("/chat",status_code=status.HTTP_200_OK,response_model=ChatResponse)
-async def chat_endpoint(request: ChatRequest) -> ChatResponse:
+async def chat_endpoint(request: ChatRequest) -> StreamingResponse:
     try:
         # Use the most recent user message as the question for RAG and the model
         question = next(
@@ -42,7 +42,10 @@ async def chat_endpoint(request: ChatRequest) -> ChatResponse:
                 detail="Received an empty response from the AI service.",
             )
 
-        return ChatResponse(reply=reply)
+        return StreamingResponse(
+            llm.generate_text(question),
+            media_type="text/plain",
+        )
 
 
     except HTTPException:
