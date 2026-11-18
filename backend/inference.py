@@ -9,7 +9,7 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=['https://digital-twin-dqlo.onrender.com'],
-    allow_methods=["*"],
+    allow_methods=["https://digital-twin-trfp.vercel.app/"],
     allow_headers=["*"],
 )
 app.include_router(rt)
