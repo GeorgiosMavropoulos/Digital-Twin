@@ -1,6 +1,6 @@
 # Digital Twin
 
-A personal website with an AI chatbot that answers questions about me, my background, projects, and interests. The bot retrieves information from a vector database of my own materials, so its answers stay grounded in what I've actually provided.
+A personal website with an AI chatbot that answers questions about me, my background, projects, and interests. The bot retrieves information from a vector database of my own materials, so its answers stay grounded in what I've actually provided. Visit on: https://digital-twin-trfp.vercel.app/
 
 ## Features
 
@@ -16,7 +16,7 @@ A personal website with an AI chatbot that answers questions about me, my backgr
 - **ChromaDB**: vector store for embeddings of my profile and documents, plus conversation memory
 - **Next.JS**: web UI for the chatbot
 - **LLM provider**: Gemini
-- **Tests: pytest
+- **Tests**: pytest
  
 ```
 digital-twin/
