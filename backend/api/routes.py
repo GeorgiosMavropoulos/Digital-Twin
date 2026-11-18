@@ -31,5 +31,5 @@ async def chat_endpoint(request: ChatRequest) -> StreamingResponse:
             detail="No user message found.",
         )
 
-    stream = llm.generate_stream(question)  # όνομα όπως στο LLMService
+    stream = llm.generate_text(question)  # όνομα όπως στο LLMService
     return StreamingResponse(stream, media_type="text/plain")
