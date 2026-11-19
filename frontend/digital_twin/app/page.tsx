@@ -282,7 +282,7 @@ async function sendMessage(text = message) {
             <div className="bot-avatar">✳</div>
 
             <div>
-              <strong>Georgios's Digital Twin</strong>
+              <strong>George's Digital Twin</strong>
 
               <span>
                 <i /> Online and ready to chat
