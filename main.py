@@ -23,7 +23,8 @@ def main():
         prompt = prompt_.digital_twin_prompt(profile_text=relevant_context,question=question)
         
         answer = llm_client.generate_text(prompt)
-        print(answer)
+        full_answer = "".join(answer)
+        print(full_answer)
 
 main()
 
