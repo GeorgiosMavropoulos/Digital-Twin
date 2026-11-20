@@ -8,7 +8,7 @@ A personal website with an AI chatbot that answers questions about me, my backgr
 - **Retrieval-augmented answers** via ChromaDB, so responses draw on my own documents
 - **Persistent memory** that remembers prior conversations across sessions
 - **Next.JS web interface** for chatting directly in the browser
-- **CI/CD Pipeline using automated tests running on Github (To-Do).
+- **Evaluate Digital Twin's response using another LLM
 
 - # Tech Stack
 
