@@ -24,3 +24,17 @@ class PromptTemplates:
         --- PROFILE INFORMATION ---
         {profile_text}
         ---------------------------"""
+
+
+    @staticmethod
+    def validate_prompt(profile_text: str, question:str, response:str)->str:
+        return f"""
+                You are an LLM's judge. Your job is to evaluate its response: {response} against user's profile:{question}
+                You should read carefully the response and compare against user's profile {profile_text}.
+                You have to score the response with the following way:
+                1. Evaluate whether the LLM understood question's meaning (1-10. 1 very bad, 10 perfect)
+                2. Evaluate whether the LLM shared reliable information based on user's profile (1-10. 1 very bad, 10 perfect)
+
+
+
+                """
