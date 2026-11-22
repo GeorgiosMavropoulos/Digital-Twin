@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-
+import MatrixLoader  from "@/components/MatrixLoader";
 const introChunks = [
   "Hello! I'm Georgios Mavropoulos, and welcome to my digital world.",
   "I'm an AI engineer who loves turning ideas into systems that actually work.",
@@ -45,34 +45,42 @@ export default function Home() {
         "Hey! Welcome to my digital twin. Ask me anything about my background, interests, experiences, or the way I think.",
     },
   ]);
+
+  const [loading, setLoading] = useState(true);
+
+//matrix loader
+useEffect(() => {
+  
+  const timer = setTimeout(() => setLoading(false), 5000);
+  return () => clearTimeout(timer);
+}, []);
   
 
   
   // Start the typewriter when the intro scrolls into view.
   // Falls back to starting immediately if IntersectionObserver is unavailable.
-  useEffect(() => {
-    const element = introRef.current;
-    if (!element) return;
+useEffect(() => {
+  const element = introRef.current;
+  if (!element) return;
 
-    if (typeof IntersectionObserver === "undefined") {
-      setStarted(true);
-      return;
-    }
+  if (typeof IntersectionObserver === "undefined") {
+    setStarted(true);
+    return;
+  }
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setStarted(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
+  const observer = new IntersectionObserver(
+    ([entry]) => {
+      if (entry.isIntersecting) {
+        setStarted(true);
+        observer.disconnect();
+      }
+    },
+    { threshold: 0.1 }
+  );
 
-    observer.observe(element);
-    return () => observer.disconnect();
-  }, []);
-
+  observer.observe(element);
+  return () => observer.disconnect();
+}, [loading]);
   // Single typewriter loop: type characters, pause, then move to the next sentence
   useEffect(() => {
     if (!started || chunkIndex >= introChunks.length) return;
@@ -146,8 +154,22 @@ async function sendMessage(text = message) {
   }
 }
 
+    if (loading) {
+    return (
+      <div className="page-loader">
+        <MatrixLoader cols={30} rows={8} label="LOADING DIGITAL TWIN..." />
+      </div>
+    );
+  }
+
+
   return (
+
+    
+    
     <main className="site-shell">
+
+      
       {/* NAVIGATION */}
       <nav className="navbar">
         <a href="#" className="brand">
