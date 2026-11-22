@@ -550,3 +550,45 @@ footer span:first-child {
     transform: translateY(-3px);
   }
 }
+
+.matrix-loader {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: monospace;
+}
+
+.matrix-grid {
+  display: grid;
+  gap: 2px;
+}
+
+.matrix-cell {
+  color: #00ff41;
+  text-shadow: 0 0 6px #00ff41;
+  font-size: 12px;
+  text-align: center;
+  transition: opacity 0.1s;
+}
+
+.matrix-label {
+  color: #00ff41;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+}
+
+/* PAGE LOADER (full screen, shown before the site loads) */
+
+.page-loader {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  z-index: 9999;
+}
+
+.page-loader .matrix-cell {
+  font-size: 16px;
+}
